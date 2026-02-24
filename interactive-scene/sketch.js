@@ -35,7 +35,7 @@ function draw() {
 function displayCard(value, suit) {}
 
 function displayBg() {
-  if (state === "main") {
+  if (state === "main" || state === 'play') {
     image(bg, 0, 0, width, height);
   }
   if (state === "menu") {
@@ -60,17 +60,28 @@ function mousePressed() {
     state = 'main';  
   }
 }
-    
+
+///reset button
 function keyPressed() {
   if (key === "r") {
     state = "menu";
   }
 }
 
+/// display instructions when game starts
 function instructions(){
   if(state === 'main'){
     text('space to deal cards',20,20);
     image(instructionsImg,40,40,200,200)
+    let buttonDist = dist(mouseX, mouseY, buttonX, buttonY);
+    fill(0)
+    circle(buttonX,buttonY,buttonR)
+    fill(255)
+    text("OKAY!", buttonX, buttonR)
+    if (mousePressed() && buttonDist < buttonR / 2)  {
+      state = 'play'
+      console.log(state)
+    }
   }
 }
 
