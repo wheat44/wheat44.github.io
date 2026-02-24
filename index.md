@@ -5,5 +5,5 @@
 
 
 ## Assignments
-- [Interactive Scene] (interactive-scene)
+- [Interactive Scene](interactive-scene)
 
