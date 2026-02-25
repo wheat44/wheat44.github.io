@@ -1,13 +1,16 @@
 /// Assign Gamestate
 state = "menu";
 
-/// Assign values and define terms
+/// Assign global variables and define terms
+/// dont forget to make all of the button varibles based on screen height/width so it can resize
 let suits = ["Spade", "Heart", "Diamond", "Club"];
 let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
 let buttonX = 50;
 let buttonY = 50;
 let buttonR = 75;
 let button = false;
+let bet = 100
+let playerMoney = 5000
 
 
 /// preload
@@ -15,7 +18,7 @@ function preload() {
   ///load all images
   bg = loadImage("Assets/BG/background.webp");
   menu = loadImage("Assets/BG/blackjack bg.png");
-  instructionsImg  = loadImage("Assets/instructions.png")
+  instructionsImg  = loadImage("Assets/instructions.png");
 }
 
 function setup() {
@@ -28,8 +31,9 @@ function draw() {
   // console.log(state);
   displayBg();
   startButton();
-  console.log(button)
-  instructions()
+  console.log(state);
+  instructions();
+  displayBet();
 }
 
 function displayCard(value, suit) {}
@@ -52,12 +56,16 @@ function startButton() {
   }
 }
 
-///start menu button
+///button mousepressed controls
 function mousePressed() {
   let buttonDist = dist(mouseX, mouseY, buttonX, buttonY);
   if ((buttonDist < buttonR / 2) && state === 'menu') {
     button = !button;
     state = 'main';  
+  }
+  else if ((buttonDist < buttonR / 2) && state === 'main') {
+    button = !button;
+    state = 'play';  
   }
 }
 
@@ -78,10 +86,6 @@ function instructions(){
     circle(buttonX,buttonY,buttonR)
     fill(255)
     text("OKAY!", buttonX, buttonR)
-    if (mousePressed() && buttonDist < buttonR / 2)  {
-      state = 'play'
-      console.log(state)
-    }
   }
 }
 
@@ -89,9 +93,29 @@ function dealCards(){
   
 }
 
-function changeBet(){
-  
+///mousewheel betting control
+function mouseWheel(event) {
+  ///scrolling down
+  if (event.delta > 0 && bet > 0){
+    bet -= 25;
+  }
+  ///scrolling up
+  else if(event.delta < 0 && bet < 1000){
+    bet += 25;
+  }
+  ///prevent screen from scrolling when mouse scrolls 
+  return false 
 }
+
+function displayBet(){
+  if (state === 'play'){
+    let amount = bet
+    text(amount, 80,80)
+    
+  }
+}
+
+
 
 function calcScore(){
   
@@ -101,3 +125,7 @@ function displayResult(){
   
 }
 
+/// if window is resized, resize the canvas
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+}

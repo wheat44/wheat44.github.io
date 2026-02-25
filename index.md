@@ -6,4 +6,5 @@
 
 ## Assignments
 - [Interactive Scene](interactive-scene)
+- [scope](02-scope) 
 
