@@ -11,6 +11,7 @@ let buttonR = 75;
 let button = false;
 let bet = 100
 let playerMoney = 5000
+let deal = false;
 
 
 /// preload
@@ -89,7 +90,15 @@ function instructions(){
   }
 }
 
+function keyPressed(){
+  ///space pressed changes deal to true
+  if (key === "32" && state = 'play'){
+    deal = trie;
+  }
+    
+}
 function dealCards(){
+  if (deal === true)
   
 }
 
