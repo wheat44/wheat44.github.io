@@ -3,8 +3,9 @@ state = "menu";
 
 /// Assign global variables and define terms
 /// dont forget to make all of the button varibles based on screen height/width so it can resize
-let suits = ["Spade", "Heart", "Diamond", "Club"];
-let values = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+let suits = ["Spades", "Hearts", "Diamonds", "Clubs"];
+let values = [ "2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king", "ace"];
+let cardImages = {};
 let buttonX = 50;
 let buttonY = 50;
 let buttonR = 75;
@@ -12,6 +13,11 @@ let button = false;
 let bet = 100
 let playerMoney = 5000
 let deal = false;
+let card = {
+  cardValue: values[12],
+  cardSuite: suits[2]
+};
+
 
 
 /// preload
@@ -20,6 +26,17 @@ function preload() {
   bg = loadImage("Assets/BG/background.webp");
   menu = loadImage("Assets/BG/blackjack bg.png");
   instructionsImg  = loadImage("Assets/instructions.png");
+
+  ///load cards using a nested loop
+  for (let i = 0; i < 3; i++) {
+    for (let j = 0; j < 12; j++) {
+      let fileName = values[j] + "_of_" + suits[i] + ".svg";
+      let key = values[j] + "_" + suits[i];
+      /// key in form 2_Spades
+
+      cardImages[key] = loadImage("Assets/Cards/" + fileName);
+    }
+  }
 }
 
 function setup() {
@@ -29,12 +46,13 @@ function setup() {
 }
 
 function draw() {
-  // console.log(state);
+  console.log(deal);
   displayBg();
   startButton();
-  console.log(state);
+  // console.log(state);
   instructions();
   displayBet();
+  dealCards();
 }
 
 function displayCard(value, suit) {}
@@ -70,13 +88,6 @@ function mousePressed() {
   }
 }
 
-///reset button
-function keyPressed() {
-  if (key === "r") {
-    state = "menu";
-  }
-}
-
 /// display instructions when game starts
 function instructions(){
   if(state === 'main'){
@@ -92,14 +103,25 @@ function instructions(){
 
 function keyPressed(){
   ///space pressed changes deal to true
-  if (key === "32" && state = 'play'){
-    deal = trie;
+  if (keyCode === 32 && state === 'play'){
+    deal = true;
   }
-    
+  /// r to reset 
+  if (key === "r") {
+    state = "menu";
+  }
 }
+    
 function dealCards(){
-  if (deal === true)
-  
+  if (deal === true){
+    let randSuits1 = floor(random(0,3))
+    let randValue1 = floor(random(0,12))
+    image(cardImages[values[randValue1] + '_' + suits[randSuits1]], 600, 600, 200, 200)
+    let randSuits2 = floor(random(0,3))
+    let randValue2 = floor(random(0,12))
+    image(cardImages[values[randValue2] + '_' + suits[randSuits2]], 1000, 600, 200, 200)
+    deal = false
+  }
 }
 
 ///mousewheel betting control
