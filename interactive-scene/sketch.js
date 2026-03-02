@@ -1,3 +1,7 @@
+/// add a inplay = false after the dealer score is calculated and compared, add it to the result
+
+
+
 /// Assign Gamestate
 state = "menu";
 
@@ -7,8 +11,9 @@ state = "menu";
 /// create arrays for suits, values, images, and player cards
 let suits = ["Spades", "Hearts", "Diamonds", "Clubs"];
 let values = [ "ace","2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"];
-let cardImages = {};
+let cardImages = [];
 let playerCards = [];
+let dealerCards = [];
 
 
 ///button locations and dimensions
@@ -27,18 +32,27 @@ let button = false;
 let hit = false;
 let deal = false;
 let stand = false;
+let inPlay = false;
+let cardFlipped = false;
+let temp = false;
 
 
 ///numerical game variables 
 let bet = 100
 let playerMoney = 5000
 let score = 0;
+let dealerScore = 0;
 
-///define card object for testing purposes, will be used to store card info when dealing cards to player
+///define card object to use inside loop for card info
 let card = {
   cardValue: values[12],
   cardSuite: suits[2]
 };
+
+let dealerCard = {
+  cardValue: values[12],
+  cardSuite: suits[2]
+}
 
 
 
@@ -48,6 +62,9 @@ function preload() {
   bg = loadImage("Assets/BG/background.webp");
   menu = loadImage("Assets/BG/blackjack bg.png");
   instructionsImg  = loadImage("Assets/instructions.png");
+
+  //back of card
+  bOC = loadImage('Assets/Cards/back_of_card.png')
 
   ///load cards using a nested loop
   for (let index = 0; index < 4; index++) {
@@ -78,8 +95,9 @@ function draw() {
   displayBet();
   dealCards();
   calcScore();
-  console.log(score);
+  // console.log(score);
   displayResult();
+  dealDealerCards();
 }
 
 
@@ -149,6 +167,7 @@ function mousePressed() {
 
     if (sButtonDist < sButtonR / 2) {
       stand = true;
+      
     }
   }
 }
@@ -170,7 +189,7 @@ function instructions(){
 
 function keyPressed(){
   ///space pressed changes deal to true
-  if (keyCode === 32 && state === 'play'){
+  if (keyCode === 32 && state === 'play' && !inPlay){
     deal = true;
   }
   /// r to reset 
@@ -188,6 +207,9 @@ function dealCards() {
     hit = false; // reset hit
     stand = false; // reset stand
     score = 0; // reset score
+    
+    ///change inPlay function
+    inPlay = true;
 
 /// deal the first 2 cards, evenly scaped out using index variable
     for (let index = 0; index < 2; index++) {
@@ -211,17 +233,56 @@ function dealCards() {
   }
 
 ///draw the cards
-  if (state === 'play') {
+  if (inPlay === true) {
 
     for (let index = 0; index < playerCards.length; index++) {
-
+    ///define player cards 
       let card = playerCards[index];
-
       let key = values[card.value] + '_' + suits[card.suit];
-
+      ///evenly space out cards and draw image
       image(cardImages[key], 400 + index * 250, 600, 200, 200);
     }
   }
+}
+
+
+function dealDealerCards(){
+///fix ts
+  ///reset dealer cards
+  if (temp === true){
+    dealerCards = [];
+    dealerScore = 0;
+    
+    ///add 2 cards to his hand
+    for (let index = 0; index < 2; index++) {
+      dealerCards.push({
+      suit: floor(random(0,4)),
+      value: floor(random(0,13))
+      });
+    }
+    if (state === 'play' && dealercards)  {
+      ///display the first dealer card
+      let key = (dealerCards.cardValue + "_" + dealerCards.cardSuite)
+      image(cardImages[key], 400 +  250, 200, 200, 200);
+      if (!cardFlipped){
+        image(bOC, 600, 250, 200, 200, 200);
+      }
+    }
+  }
+    /// if below 16 have him hit after everyone has played
+    if (dealerScore <= 16 & stand){
+      dealerCards.push({
+        suit: floor(random(0,4)),
+        value: floor(random(0,13))
+      })
+    if (stand){
+      ///flip his other cards
+      cardFlipped = true
+
+
+
+    }
+  }  
 }
 
 ///mousewheel betting control
@@ -289,6 +350,7 @@ function calcScore(){
       textSize(50);
       fill('black')
       text("BUST!", width/2, height/2);
+      inPlay = false
     }
     score = score;   
     }
