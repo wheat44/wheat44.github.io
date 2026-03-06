@@ -9,5 +9,6 @@
 
 ## Assignments
 - [Interactive Scene](interactive-scene)
+- [array Assignemnt](array-assignment)
 
 
