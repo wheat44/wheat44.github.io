@@ -12,11 +12,17 @@ let suits = ["Spades", "Hearts", "Diamonds", "Clubs"];
 let values = [ "ace","2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"];
 let cardImages = [];
 
+
+let buttonX;
+let buttonY;
+let buttonH;
+let buttonW;
+
 function preload() {
   ///load background and meny images
-  bg = loadImage("Assets/BG/background.png");
-  menu = loadImage("Assets/BG/blackjack bg.png");
-  instructionsImg  = loadImage("Assets/BG/Instructions_BG.png");
+  main = loadImage("Assets/BG/mainBG.jpg");
+  menu = loadImage("Assets/BG/menu.png");
+  // instructionsImg  = loadImage("Assets/BG/Instructions_BG.png");
 
   //back of card
   bOC = loadImage('Assets/Cards/back_of_card.png');
@@ -39,10 +45,62 @@ function preload() {
 
 
 
+
+
 function setup() {
   createCanvas(windowWidth, windowHeight);
+  buttonH = windowHeight/ 15;
+  buttonW = windowWidth / 15;
+  buttonX = windowWidth / 2;
+  buttonY = windowHeight / 1.5;
 }
 
 function draw() {
-  background(220);
+  displayBG();
+  displayButtons();
+}
+
+function displayBG(){
+  if (state === 'menu'){
+    image(menu,0,0, windowWidth, windowHeight);
+  }
+  else if (state === 'main'){
+    image(main, 0, 0, windowWidth, windowHeight);
+  }
+}
+
+function mousePressed(){
+  if (state === 'menu') {
+
+    if (mouseX > buttonX && mouseX < buttonX + buttonW && mouseY > buttonY && mouseY < buttonY +buttonH ) {
+      state = 'main';
+      console.log('poop');
+    }
+  }
+}
+
+function keyPressed(){
+  /// r to reset 
+  if (key === "r") {
+    state = "menu";
+  }
+}
+
+function displayButtons(){
+  if (state === 'menu'){
+    fill(0,222,41);
+    rectMode(CENTER);
+    textAlign(CENTER);
+    rect(buttonX, buttonY, buttonW, buttonH);
+    fill('black');
+    text('START!',buttonX, buttonY);
+  }
+}
+
+function windowResized() {
+  resizeCanvas(windowWidth, windowHeight);
+  buttonH = windowHeight/ 15;
+  buttonW = windowWidth / 15;
+  buttonX = windowWidth /2;
+  buttonY = windowHeight / 1.5;
 }
