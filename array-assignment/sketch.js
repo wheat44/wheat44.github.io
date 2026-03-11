@@ -34,6 +34,9 @@ function preload() {
   menu = loadImage("Assets/BG/menu.png");
   instructions = loadImage('Assets/BG/instructions.png');
 
+  ///load font
+  font = loadFont('Assets/Moralana Demo.otf');
+
   //back of card
   bOC = loadImage('Assets/Cards/back_of_card.png');
 
@@ -131,12 +134,16 @@ function mouseWheel(event) {
 
 function displayBet(){
   if (state === 'main'){
-    fill(20,186,43);
-    textSize(20);
+    textFont(font);
+    fill(194,146,78);
+    textSize(30);
     let amount = bet;
     text("Bet: $" + amount, windowWidth * 0.1, windowHeight * 0.2);
     let money = playerMoney;
     text("Money: $" + money, windowWidth * 0.1, windowHeight * 0.25);
+    ellipseMode(CENTER);
+    fill(196, 180,150);
+    ellipse(windowWidth * 0.15, windowWidth* 0.23, 80, 40, 6);
     
   }
 }
