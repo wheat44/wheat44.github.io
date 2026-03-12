@@ -11,7 +11,13 @@ let state = 'menu';
 let suits = ["Spades", "Hearts", "Diamonds", "Clubs"];
 let values = [ "ace","2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"];
 let cardImages = [];
-let cards = [];
+let cards = [
+  {value: "", suit: ""},
+  {value: "", suit: ""},
+  {value: "", suit: ""},
+  {value: "", suit: ""}
+];
+
 
 
 let buttonX;
@@ -20,6 +26,8 @@ let buttonH;
 let buttonW;
 let cardWidth;
 let cardHeight;
+let cardX;
+let cardY;
 
 
 let inPlay = false;
@@ -58,15 +66,22 @@ function setup() {
   buttonW = windowWidth / 15;
   buttonX = windowWidth / 2;
   buttonY = windowHeight / 1.5;
+  cardHeight = windowHeight/20;
+  cardWidth = windowWidth/20;
+  cardX = width / 3;
+  cardY = height / 2.5;
 }
 
 function draw() {
   displayBG();
   displayButtons();
   displayBet();
+  chooseCardValue();
+  console.log(state);
 }
 
 function displayBG(){
+  imageMode(CORNER);
   if (state === 'menu'){
     image(menu,0,0, windowWidth, windowHeight);
   }
@@ -78,30 +93,41 @@ function displayBG(){
   }
 }
 
-function mousePressed(){
+function mouseClicked(){
   if (state === 'menu') {
     if (mouseX > (buttonX - 1/2 * buttonW) && mouseX < (buttonX + 1/2 * buttonW) && mouseY > (buttonY - 1/2 *buttonH) && mouseY < (buttonY + 1/2 *buttonH )){
       state = 'instructions';
-      console.log('poop');
     }
   }
   else if (state === 'instructions') {
     if (mouseX > (buttonX - 1/2 * buttonW) && mouseX < (buttonX + 1/2 * buttonW) && mouseY > (buttonY - 1/2 *buttonH) && mouseY < (buttonY + 1/2 *buttonH )){
       state = 'main'; 
-      console.log('poop');
     }
+  }
+  else if (state === 'main') {
+    if (mouseX > (buttonX - 1/2 * buttonW) && mouseX < (buttonX + 1/2 * buttonW) && mouseY > (buttonY - 1/2 *buttonH) && mouseY < (buttonY + 1/2 *buttonH )){
+      state = 'play'; 
+      inPlay = 'true';
+    }
+    
   }
 }
 
 function keyPressed(){
-  /// r to reset 
-  if (key === "r") {
+  /// r to reset and space to deal cards
+  if (key === "r" && inPlay === false) {
     state = "menu";
+  }
+  if (key === "space" && state === 'main'){
+    state = 'play';
+    inPlay = true;
   }
 }
 
 function displayButtons(){
   if (state === 'menu'){
+    textFont('Courier New');
+    textSize(20);
     fill(0,222,41);
     rectMode(CENTER);
     textAlign(CENTER);
@@ -110,12 +136,24 @@ function displayButtons(){
     text('START!',buttonX, buttonY);
   }
   if (state === 'instructions'){
+    textFont('Courier New');
+    textSize(20);
     fill(0,222,41);
     rectMode(CENTER);
     textAlign(CENTER);
     rect(buttonX, buttonY, buttonW, buttonH);
     fill('black');
     text('OKAY!',buttonX, buttonY);
+  }
+  if (state === 'main'){
+    textFont('Courier New');
+    textSize(20);
+    fill(0,222,41);
+    rectMode(CENTER);
+    textAlign(CENTER);
+    rect(buttonX, buttonY, buttonW, buttonH);
+    fill('black');
+    text('Deal!',buttonX, buttonY);
   }
 }
 
@@ -148,12 +186,23 @@ function displayBet(){
   }
 }
 
-function displayBackCards(){
-  imageMode(CENTER);
-  image(bOC,width/2 - width/60, height/2, cardWidth, cardHeight);
-  image(bOC,width/2 - width/30, height/2, cardWidth, cardHeight);
-}
+function chooseCardValue(){
+  if (state === 'play'){
 
+    for (let i = 0; i < 4; i++){
+
+      let valueIndex = floor(random(0, 13));
+      let suitIndex = floor(random(0, 4));
+      
+
+      cards[i].value = values[valueIndex];
+      cards[i].suit = suits[suitIndex];
+      let key = cards[i].value + '_' + cards[i].suit;
+      image(cardImages[key], cardX + i * (width/10), cardY, cardWidth, cardHeight);
+    }
+
+  }
+}
 
 
 
@@ -165,4 +214,8 @@ function windowResized() {
   buttonW = windowWidth / 15;
   buttonX = windowWidth /2;
   buttonY = windowHeight / 1.5;
+  cardWidth = windowWidth / 10;
+  cardHeight = windowHeight/20;
+  cardX = width / 4 ;
+  cardY = height / 2.5;
 }
