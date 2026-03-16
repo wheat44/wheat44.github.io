@@ -11,11 +11,12 @@ let state = 'menu';
 let suits = ["Spades", "Hearts", "Diamonds", "Clubs"];
 let values = [ "ace","2", "3", "4", "5", "6", "7", "8", "9", "10", "jack", "queen", "king"];
 let cardImages = [];
+let key;
 let cards = [
-  {value: "", suit: ""},
-  {value: "", suit: ""},
-  {value: "", suit: ""},
-  {value: "", suit: ""}
+  {value: "", suit: "",key:""},
+  {value: "", suit: "",key:""},
+  {value: "", suit: "",key:""},
+  {value: "", suit: "",key:""}
 ];
 
 
@@ -31,6 +32,7 @@ let cardY;
 
 
 let inPlay = false;
+let playStage = 0;
 
 let bet = 0;
 let playerMoney = 5000;
@@ -66,8 +68,8 @@ function setup() {
   buttonW = windowWidth / 15;
   buttonX = windowWidth / 2;
   buttonY = windowHeight / 1.5;
-  cardHeight = windowHeight/20;
-  cardWidth = windowWidth/20;
+  cardHeight = windowHeight/8;
+  cardWidth = windowWidth/16;
   cardX = width / 3;
   cardY = height / 2.5;
 }
@@ -76,8 +78,8 @@ function draw() {
   displayBG();
   displayButtons();
   displayBet();
-  chooseCardValue();
-  console.log(state);
+  displayCardValue();
+  decideCardValue();
 }
 
 function displayBG(){
@@ -107,7 +109,6 @@ function mouseClicked(){
   else if (state === 'main') {
     if (mouseX > (buttonX - 1/2 * buttonW) && mouseX < (buttonX + 1/2 * buttonW) && mouseY > (buttonY - 1/2 *buttonH) && mouseY < (buttonY + 1/2 *buttonH )){
       state = 'play'; 
-      inPlay = 'true';
     }
     
   }
@@ -118,9 +119,13 @@ function keyPressed(){
   if (key === "r" && inPlay === false) {
     state = "menu";
   }
-  if (key === "space" && state === 'main'){
+  if (keyCode === 32 && state === 'main'){
     state = 'play';
     inPlay = true;
+  }
+  if (keyCode === 38 && state === 'play' && playStage < 4){
+    playStage ++;
+    inPlay = false;
   }
 }
 
@@ -186,22 +191,68 @@ function displayBet(){
   }
 }
 
-function chooseCardValue(){
-  if (state === 'play'){
+function displayCardValue(){
+  if (state === 'play' && !inPlay){
 
+    for (let i = 0; i < 4; i++){
+      inPlay = true;
+      if (inPlay === true){
+        if (playStage < 1){
+          image(bOC, cardX + i * (width/10), cardY, cardWidth, cardHeight);
+        
+        }
+        else if (playStage === 1){
+          if (i >= 1){
+            image(bOC, cardX + i * (width/10), cardY, cardWidth, cardHeight);
+          }
+          else {
+            image(cardImages[cards[i].key], cardX + i * (width/10), cardY, cardWidth, cardHeight);
+          }
+        }
+        else if (playStage === 2){
+          if (i >= 2){
+            image(bOC, cardX + i * (width/10), cardY, cardWidth, cardHeight);
+          }
+          else {
+            image(cardImages[cards[i].key], cardX + i * (width/10), cardY, cardWidth, cardHeight);
+          }
+        }
+        else if (playStage === 3){
+          if (i >= 3){
+            image(bOC, cardX + i * (width/10), cardY, cardWidth, cardHeight);
+          }
+          else {
+            image(cardImages[cards[i].key], cardX + i * (width/10), cardY, cardWidth, cardHeight);
+          }
+        }
+        else if (playStage === 4){
+          image(cardImages[cards[i].key], cardX + i * (width/10), cardY, cardWidth, cardHeight);
+        }
+      }
+    }
+  }
+}
+
+function decideCardValue(){
+  if (!inPlay){
     for (let i = 0; i < 4; i++){
 
       let valueIndex = floor(random(0, 13));
       let suitIndex = floor(random(0, 4));
-      
+        
 
       cards[i].value = values[valueIndex];
       cards[i].suit = suits[suitIndex];
-      let key = cards[i].value + '_' + cards[i].suit;
-      image(cardImages[key], cardX + i * (width/10), cardY, cardWidth, cardHeight);
+      key = cards[i].value + '_' + cards[i].suit;
+      cards[i].key = key;
+      
     }
+  } 
+}
 
-  }
+function playButtons(){
+
+
 }
 
 
@@ -214,8 +265,8 @@ function windowResized() {
   buttonW = windowWidth / 15;
   buttonX = windowWidth /2;
   buttonY = windowHeight / 1.5;
-  cardWidth = windowWidth / 10;
-  cardHeight = windowHeight/20;
-  cardX = width / 4 ;
-  cardY = height / 2.5;
+  cardWidth = windowWidth / 8;
+  cardHeight = windowHeight/16;
+  cardX = windowWidth / 4 ;
+  cardY = windowHeight / 2.5;
 }
