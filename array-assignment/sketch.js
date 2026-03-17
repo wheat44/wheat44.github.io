@@ -31,11 +31,11 @@ let cardX;
 let cardY;
 
 
-let inPlay = false;
 let playStage = 0;
 
 let bet = 0;
 let playerMoney = 5000;
+let choice;
 
 
 function preload() {
@@ -80,6 +80,8 @@ function draw() {
   displayBet();
   displayCardValue();
   decideCardValue();
+  calcResult();
+  console.log(state);
 }
 
 function displayBG(){
@@ -87,7 +89,7 @@ function displayBG(){
   if (state === 'menu'){
     image(menu,0,0, windowWidth, windowHeight);
   }
-  else if (state === 'main'){
+  else if (state === 'main' || state === 'play' || state ==='redo'){
     image(main, 0, 0, windowWidth, windowHeight);
   }
   else if (state === 'instructions'){
@@ -106,26 +108,53 @@ function mouseClicked(){
       state = 'main'; 
     }
   }
-  else if (state === 'main') {
+  else if (state === 'main' || state === 'redo') {
     if (mouseX > (buttonX - 1/2 * buttonW) && mouseX < (buttonX + 1/2 * buttonW) && mouseY > (buttonY - 1/2 *buttonH) && mouseY < (buttonY + 1/2 *buttonH )){
       state = 'play'; 
     }
-    
+  }
+  ///red pressed
+  if (state === 'play') {
+    if (mouseX > (buttonX - 1/2 * buttonW - (width/20)) && mouseX < (buttonX + 1/2 * buttonW - (width/20)) && mouseY > (buttonY - 1/2 *buttonH) && mouseY < (buttonY + 1/2 *buttonH )){
+      choice = 'red';
+      console.log("button worked red");
+      if (cards[playStage].suit === 'Hearts' || cards[playStage].suit === 'Diamonds'){
+        playStage ++;
+      }  
+      else{
+        state = 'redo';
+        console.log("wrong");
+      }  
+    }
+  }
+  ///black pressed
+  if (state === 'play') {
+    if (mouseX > (buttonX - 1/2 * buttonW + (width/20)) && mouseX < (buttonX + 1/2 * buttonW + (width/20)) && mouseY > (buttonY - 1/2 *buttonH) && mouseY < (buttonY + 1/2 *buttonH )){
+      choice = 'black';
+      console.log("button worked black");
+      if (cards[playStage].suit === 'Spades' || cards[playStage].suit === 'Clubs'){
+        playStage ++;
+      }  
+      else{
+        state = 'redo';
+        console.log("wrong");
+      }  
+    }
   }
 }
 
 function keyPressed(){
   /// r to reset and space to deal cards
-  if (key === "r" && inPlay === false) {
+  if (key === "r" ) {
     state = "menu";
   }
   if (keyCode === 32 && state === 'main'){
     state = 'play';
-    inPlay = true;
+
   }
   if (keyCode === 38 && state === 'play' && playStage < 4){
     playStage ++;
-    inPlay = false;
+
   }
 }
 
@@ -140,7 +169,7 @@ function displayButtons(){
     fill('black');
     text('START!',buttonX, buttonY);
   }
-  if (state === 'instructions'){
+  else if (state === 'instructions'){
     textFont('Courier New');
     textSize(20);
     fill(0,222,41);
@@ -150,7 +179,7 @@ function displayButtons(){
     fill('black');
     text('OKAY!',buttonX, buttonY);
   }
-  if (state === 'main'){
+  else if (state === 'main'){
     textFont('Courier New');
     textSize(20);
     fill(0,222,41);
@@ -160,15 +189,36 @@ function displayButtons(){
     fill('black');
     text('Deal!',buttonX, buttonY);
   }
+
+  if (state === 'play'){
+    textFont('Courier New');
+    textSize(20);
+    fill("red");
+    rectMode(CENTER);
+    textAlign(CENTER);
+    rect(buttonX - (width/20), buttonY, buttonW, buttonH);
+    fill('white');
+    text('red',buttonX - (width/20), buttonY);
+  }
+  if (state === 'play'){
+    textFont('Courier New');
+    textSize(20);
+    fill("black");
+    rectMode(CENTER);
+    textAlign(CENTER);
+    rect(buttonX + (width/20), buttonY, buttonW, buttonH);
+    fill('white');
+    text('Black',buttonX + (width/20), buttonY);
+  }
 }
 
 function mouseWheel(event) {
   ///scrolling down
-  if (event.delta > 0 && bet > 0 && inPlay === false && state === 'main' && bet <= playerMoney){
+  if (event.delta > 0 && bet > 0 && state === 'main' && bet <= playerMoney){
     bet -= 25;
   }
   ///scrolling up
-  else if(event.delta < 0 && bet < 1000 && inPlay === false && state === 'main' && bet <= playerMoney){
+  else if(event.delta < 0 && bet < 1000  && state === 'main' && bet <= playerMoney){
     bet += 25;
   }
   ///prevent screen from scrolling when mouse scrolls 
@@ -192,14 +242,11 @@ function displayBet(){
 }
 
 function displayCardValue(){
-  if (state === 'play' && !inPlay){
-
+  if (state === 'play'){
     for (let i = 0; i < 4; i++){
-      inPlay = true;
-      if (inPlay === true){
+      if (state === 'play'){
         if (playStage < 1){
           image(bOC, cardX + i * (width/10), cardY, cardWidth, cardHeight);
-        
         }
         else if (playStage === 1){
           if (i >= 1){
@@ -234,7 +281,7 @@ function displayCardValue(){
 }
 
 function decideCardValue(){
-  if (!inPlay){
+  if (state !== 'play'){
     for (let i = 0; i < 4; i++){
 
       let valueIndex = floor(random(0, 13));
@@ -255,7 +302,14 @@ function playButtons(){
 
 }
 
+function calcResult(){
+  if (playStage === 4){
+    state = 'redo';
+    playStage = 0;
 
+  }
+
+}
 
 
 

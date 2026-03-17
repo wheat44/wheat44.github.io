@@ -5,6 +5,7 @@
 - [scope](02-scope) 
 - [Images](03-images)
 - [Ball Array](04-ball-array)
+- [Perlin Noise](06-perlin)
 
 
 ## Assignments
