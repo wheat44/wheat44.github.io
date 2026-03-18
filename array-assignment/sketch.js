@@ -171,7 +171,7 @@ function mouseClicked(){
         break;
       }
     }
-      ///check if cash out button is clicked
+    ///check if cash out button is clicked
     if (mouseX > windowWidth * 0.9 - buttonW/2 && mouseX < windowWidth * 0.9 + buttonW/2 && mouseY > windowHeight * 0.9 - buttonH/2 && mouseY < windowHeight * 0.9 + buttonH/2 && playStage >=1){
       state = 'main';
       ///change player money based on bet and playstage
