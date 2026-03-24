@@ -2,6 +2,8 @@
 
 const CELL_SIZE = 20;
 const RENDER_ON_FRAME = 2;
+const LIVE_CELL = 1;
+const DEAD_CELL =0;
 
 let autoPlayIsOn = true;
 let grid;
@@ -67,23 +69,23 @@ function updateGrid() {
       neighbours -= grid[y][x];
 
       //apply the rules
-      if (grid[y][x] === 1) {
+      if (grid[y][x] === LIVE_CELL) {
         //currently alive
         if (neighbours === 2 || neighbours === 3) {
-          nextTurn[y][x] = 1;
+          nextTurn[y][x] = LIVE_CELL;
         }
         else {
-          nextTurn[y][x] = 0;
+          nextTurn[y][x] = DEAD_CELL;
         }
       }
 
-      if (grid[y][x] === 0) {
+      if (grid[y][x] === DEAD_CELL) {
         //currently dead
         if (neighbours === 3) {
-          nextTurn[y][x] = 1;
+          nextTurn[y][x] = LIVE_CELL;
         }
         else {
-          nextTurn[y][x] = 0;
+          nextTurn[y][x] = DEAD_CELL;
         }
       }
     }
@@ -106,11 +108,11 @@ function toggleCell(x, y) {
 function displayGrid() {
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
-      if (grid[y][x] === 0) {
+      if (grid[y][x] === DEAD_CELL) {
         fill("white");
       }
-      if (grid[y][x] === 1) {
-        fill("black");
+      if (grid[y][x] === LIVE_CELL) {
+        fill(random(0,255),random(0,255),random(0,255));
       }
       square(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE);
     }

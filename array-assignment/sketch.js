@@ -110,7 +110,6 @@ function draw() {
   displayButtons();
   displayBet();
   displayCardValue();
-
 }
 
 function displayBG(){
