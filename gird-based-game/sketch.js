@@ -7,6 +7,8 @@
 
 state = 'start';
 
+let blackBets = [2,4,6,8,10,11,13,15,17,22,24,26,28,29,31,33,35];
+
 
 let bettingGrid = [];
 const ROWS = 12;
@@ -15,7 +17,11 @@ let betHeight;
 let betWidth;
 let betX;
 let betY;
-let cell_size;
+let cellX;
+let cellY;
+let colour;
+let betTextX;
+let betTextY;
 
 
 
@@ -32,9 +38,10 @@ function setup() {
   createCanvas(windowWidth, windowHeight);
   betWidth = windowWidth/4;
   betHeight = windowHeight/5;
-  betX = windowWidth/1.5;
+  betX = windowWidth/2;
   betY = windowHeight/2;
-  cell_size = windowWidth/40;
+  cellX = windowWidth/25;
+  cellY = windowHeight/7;
 
 
   ///create the grid
@@ -57,7 +64,6 @@ function createGrid(){
     for (let x = 0; x < COLS; x++) {
       bettingGrid[y].push(index);
       index ++;
-
     }
   }
 }
@@ -85,14 +91,37 @@ function keyPressed(){
 function windowResized() {
   /// redefine variables when window is resized.
   resizeCanvas(windowWidth, windowHeight);
+  betWidth = windowWidth/4;
+  betHeight = windowHeight/5;
+  betX = windowWidth/2;
+  betY = windowHeight/2;
+  cellX = windowWidth/25;
+  cellY = windowHeight/7;
 }
 
 
 function drawGrid(){
-  for (let y = 0; y < ROWS; y++) {
-    for (let x = 0; x < COLS; x++) {
-      fill("white");
-      rect(x*cell_size, y*cell_size,cell_size);
+  if (state === 'main'){
+    for (let x = 0; x < ROWS; x++) {
+      for (let y = 0; y < COLS; y++) {
+
+        ///calculate bet text location
+        betTextX = x*cellX + betX + cellX/2;
+        betTextY = y*cellY + betY + cellY/2;
+
+        if ((y+x)%2 === 0){
+          colour = 'red';
+        }
+        else{
+          colour = 'black';
+        }
+        textSize(20);
+        textAlign(CENTER);
+        fill(colour);
+        rect(x*cellX+betX, y*cellY + betY,cellX, cellY);
+        fill('white');
+        text(bettingGrid[x][y], betTextX, betTextY);
+      }
     }
   }
 
