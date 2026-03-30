@@ -5,14 +5,24 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
+
+///designate gamestate
 state = 'start';
 
+///define blackBets (temp)
 let blackBets = [2,4,6,8,10,11,13,15,17,22,24,26,28,29,31,33,35];
 
 
+///assign game betting grid
 let bettingGrid = [];
 const ROWS = 12;
 const COLS = 3;
+
+///constant variables
+
+
+
+///initialize screen based dimensional variables 
 let betHeight;
 let betWidth;
 let betX;
@@ -22,7 +32,13 @@ let cellY;
 let colour;
 let betTextX;
 let betTextY;
+let wheelX;
+let wheelY;
+let imgWidth;
+let imgHeight;
 
+
+let angle;
 
 
 
@@ -30,11 +46,16 @@ function preload() {
   ///load background and meny images
   startIMG = loadImage("Assets/BG/Start.png");
   mainIMG = loadImage('Assets/BG/main.png');
+  rouletteIMG = loadImage('Assets/IMG/pictures/r88_Casino_pictures/roulette/roulette_wheel.png');
+  rouletteBaseIMG = loadImage('Assets/IMG/pictures/r88_Casino_pictures/roulette/roulette_base.png');
+  whiteBall = loadImage('Assets/IMG/pictures/r88_Casino_pictures/roulette/roulette_pill1.png');
+
 
 }
 
 
 function setup() {
+  ///redefine screen base dimensional variables after screenwidth and height was created
   createCanvas(windowWidth, windowHeight);
   betWidth = windowWidth/4;
   betHeight = windowHeight/5;
@@ -42,6 +63,10 @@ function setup() {
   betY = windowHeight/2;
   cellX = windowWidth/25;
   cellY = windowHeight/7;
+  wheelX = windowWidth/4;
+  wheelY =  windowHeight/1.5;
+  imgWidth = windowWidth/3.5;
+  imgHeight = windowHeight/2;
 
 
   ///create the grid
@@ -52,12 +77,16 @@ function setup() {
 
 
 function draw() {
+  ///draw loop
   displayBG();
   drawGrid();
+  drawWheel();
+  spinWheel();
 }
 
 
 function createGrid(){
+  ///creates the grid based on grid height/ width
   let index = 1;
   for (let y = 0; y < ROWS; y++) {
     bettingGrid.push([]);
@@ -74,15 +103,20 @@ function displayBG(){
   if (state === 'start'){
     image(startIMG, 0,0, windowWidth, windowHeight);
   }
-  else if (state === 'main'){
+  else if (state === 'main' || state === 'spin'){
     image(mainIMG, 0,0, windowWidth, windowHeight);
   }
 }
 
 function keyPressed(){
+  ///space to change menu
   if (key === " ") {
     state = "main";
   }
+  if (key === 's'){
+    state = 'spin';
+  }
+  /// r to reset
   if (key === "r") {
     state = "start";
   }
@@ -97,11 +131,16 @@ function windowResized() {
   betY = windowHeight/2;
   cellX = windowWidth/25;
   cellY = windowHeight/7;
+  wheelX = windowWidth/4;
+  wheelY =  windowHeight/1.5;
+  imgWidth = windowWidth/3.5;
+  imgHeight = windowHeight/2;
 }
 
 
 function drawGrid(){
-  if (state === 'main'){
+  /// draws the perviously created grid
+  if (state === 'main' || state === 'spin'){
     for (let x = 0; x < ROWS; x++) {
       for (let y = 0; y < COLS; y++) {
 
@@ -124,5 +163,67 @@ function drawGrid(){
       }
     }
   }
+
+}
+
+function drawWheel(){
+  if (state === 'main'){
+    imageMode('center');
+
+    image(rouletteIMG,wheelX,wheelY, imgWidth, imgWidth);
+    image(rouletteBaseIMG,wheelX, wheelY, imgWidth + imgWidth/3, imgWidth + imgWidth/3);
+
+    push(); 
+
+    // move origin to wheel center
+    translate(wheelX, wheelY); 
+
+    // rotate around that point
+    rotate(angle); 
+    image(whiteBall, wheelX , wheelY);
+    image(rouletteIMG, 0, 0, imgWidth, imgWidth); // draw centered
+
+    // restore canvas
+    pop(); 
+
+    // draw base after so it doesn't spin
+    image(rouletteBaseIMG, wheelX, wheelY, imgWidth + imgWidth/3, imgWidth + imgWidth/3);
+  }
+}
+
+function spinWheel(){
+  if (state === 'spin'){
+    imageMode(CENTER);
+
+    // faster spin
+    angle = frameCount * 0.05; 
+
+    // save canvas state
+    push(); 
+
+    // move origin to wheel center
+    translate(wheelX, wheelY); 
+
+    // rotate around that point
+    rotate(angle); 
+    image(whiteBall, wheelX - 200, wheelY - 200);
+    image(rouletteIMG, 0, 0, imgWidth, imgWidth); // draw centered
+    
+
+    // restore canvas
+    pop(); 
+
+    // draw base after so it doesn't spin
+    image(rouletteBaseIMG, wheelX, wheelY, imgWidth + imgWidth/3, imgWidth + imgWidth/3);
+
+    ///draw the white ball
+  }
+}
+
+function calcWinner(){
+
+}
+
+function makeBet(){
 
 }
