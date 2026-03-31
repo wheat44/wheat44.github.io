@@ -206,8 +206,8 @@ function spinWheel(){
 
     // rotate around that point
     rotate(angle); 
-    image(whiteBall, wheelX - 200, wheelY - 200);
     image(rouletteIMG, 0, 0, imgWidth, imgWidth); // draw centered
+    image(whiteBall, wheelX-120, wheelY-120 );
     
 
     // restore canvas
