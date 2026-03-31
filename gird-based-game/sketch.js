@@ -82,6 +82,7 @@ function draw() {
   drawGrid();
   drawWheel();
   spinWheel();
+  console.log(angle);
 }
 
 
@@ -115,6 +116,9 @@ function keyPressed(){
   }
   if (key === 's'){
     state = 'spin';
+  }
+  if (key === "h"){
+    state = 'spinoff';
   }
   /// r to reset
   if (key === "r") {
@@ -180,7 +184,6 @@ function drawWheel(){
 
     // rotate around that point
     rotate(angle); 
-    image(whiteBall, wheelX , wheelY);
     image(rouletteIMG, 0, 0, imgWidth, imgWidth); // draw centered
 
     // restore canvas
@@ -196,7 +199,8 @@ function spinWheel(){
     imageMode(CENTER);
 
     // faster spin
-    angle = frameCount * 0.05; 
+    angle = frameCount /400;
+    
 
     // save canvas state
     push(); 
@@ -206,8 +210,8 @@ function spinWheel(){
 
     // rotate around that point
     rotate(angle); 
-    image(rouletteIMG, 0, 0, imgWidth, imgWidth); // draw centered
-    image(whiteBall, wheelX-120, wheelY-120 );
+    image(rouletteIMG, 0, 0, imgWidth, imgWidth); 
+    
     
 
     // restore canvas
@@ -216,8 +220,42 @@ function spinWheel(){
     // draw base after so it doesn't spin
     image(rouletteBaseIMG, wheelX, wheelY, imgWidth + imgWidth/3, imgWidth + imgWidth/3);
 
-    ///draw the white ball
+
+    ///draw the white ball in reverse direction
+    push();
+    translate(wheelX,wheelY);
+    rotate(angle/-1);
+    image(whiteBall, 20,20 );
+    pop();
   }
+  else if (state === 'spinoff'){
+    imageMode(CENTER);
+    for (let spinoff = 400; spinoff > 0 ; spinoff--){
+      
+
+      angle = frameCount / spinoff;
+    
+      // save canvas stated
+      push(); 
+
+      // move origin to wheel center
+      translate(wheelX, wheelY); 
+
+      // rotate around that point
+      rotate(angle); 
+      image(rouletteIMG, 0, 0, imgWidth, imgWidth); 
+      image(whiteBall, 20,20 );
+      
+      
+      // restore canvas
+      pop(); 
+
+      // draw base after so it doesn't spin
+      image(rouletteBaseIMG, wheelX, wheelY, imgWidth + imgWidth/3, imgWidth + imgWidth/3);
+    }
+  }
+  
+  
 }
 
 function calcWinner(){
