@@ -199,7 +199,7 @@ function spinWheel(){
     imageMode(CENTER);
 
     // faster spin
-    angle = frameCount /400;
+    angle = frameCount /50;
     
 
     // save canvas state
@@ -230,31 +230,39 @@ function spinWheel(){
   }
   else if (state === 'spinoff'){
     imageMode(CENTER);
-    for (let spinoff = 400; spinoff > 0 ; spinoff--){
-      
 
-      angle = frameCount / spinoff;
+    // faster spin
+    angle = frameCount /50;
     
-      // save canvas stated
-      push(); 
 
-      // move origin to wheel center
-      translate(wheelX, wheelY); 
+    // save canvas state
+    push(); 
 
-      // rotate around that point
-      rotate(angle); 
-      image(rouletteIMG, 0, 0, imgWidth, imgWidth); 
-      image(whiteBall, 20,20 );
-      
-      
-      // restore canvas
-      pop(); 
+    // move origin to wheel center
+    translate(wheelX, wheelY); 
 
-      // draw base after so it doesn't spin
-      image(rouletteBaseIMG, wheelX, wheelY, imgWidth + imgWidth/3, imgWidth + imgWidth/3);
-    }
+    // rotate around that point
+    rotate(angle); 
+    image(rouletteIMG, 0, 0, imgWidth, imgWidth);
+
+    push();
+    image(whiteBall, 0,0 );
+    pop();
+    
+
+    
+    
+
+    // draw base after so it doesn't spin
+    image(rouletteBaseIMG, wheelX, wheelY, imgWidth + imgWidth/3, imgWidth + imgWidth/3);
+
+
+    ///draw the white ball in reverse direction
   }
-  
+}
+
+function placeBets(){
+
   
 }
 
