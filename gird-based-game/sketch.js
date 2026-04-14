@@ -41,6 +41,13 @@ let imgHeight;
 let angle;
 
 
+/// wheel variables
+let wheelAngle = 0;
+let ballAngle = 0;
+let spinSpeed = 0.1;
+let ballSpeed = -0.2;
+let spinning = false;
+
 
 function preload() {
   ///load background and meny images
@@ -82,7 +89,7 @@ function draw() {
   drawGrid();
   drawWheel();
   spinWheel();
-  console.log(angle);
+  console.log(ballSpeed);
 }
 
 
@@ -119,6 +126,7 @@ function keyPressed(){
   }
   if (key === "h"){
     state = 'spinoff';
+    spinning = false;
   }
   /// r to reset
   if (key === "r") {
@@ -176,90 +184,53 @@ function drawWheel(){
 
     image(rouletteIMG,wheelX,wheelY, imgWidth, imgWidth);
     image(rouletteBaseIMG,wheelX, wheelY, imgWidth + imgWidth/3, imgWidth + imgWidth/3);
-
-    push(); 
-
-    // move origin to wheel center
-    translate(wheelX, wheelY); 
-
-    // rotate around that point
-    rotate(angle); 
-    image(rouletteIMG, 0, 0, imgWidth, imgWidth); // draw centered
-
-    // restore canvas
-    pop(); 
-
-    // draw base after so it doesn't spin
-    image(rouletteBaseIMG, wheelX, wheelY, imgWidth + imgWidth/3, imgWidth + imgWidth/3);
   }
 }
 
 function spinWheel(){
-  if (state === 'spin'){
+  if (state === 'spin' || state === 'spinoff'){
     imageMode(CENTER);
 
-    // faster spin
-    angle = frameCount /50;
-    
+    // gradually slow down if spinoff
+    if (!spinning) {
+      spinSpeed *= 0.98;   // wheel slows down
+      ballSpeed *= 0.98;   // ball slows down
+    }
 
-    // save canvas state
-    push(); 
+    // if spinning is super slow, stop spinning to determine a exact value
+    if (spinSpeed <= 0.00001){
+      spinSpeed = 0;
 
-    // move origin to wheel center
-    translate(wheelX, wheelY); 
+    }
+    if (ballSpeed >= -0.00001){
+      ballSpeed = 0;
+    }
 
-    // rotate around that point
-    rotate(angle); 
-    image(rouletteIMG, 0, 0, imgWidth, imgWidth); 
-    
-    
-
-    // restore canvas
-    pop(); 
-
-    // draw base after so it doesn't spin
-    image(rouletteBaseIMG, wheelX, wheelY, imgWidth + imgWidth/3, imgWidth + imgWidth/3);
+    // update angles
+    wheelAngle += spinSpeed;
+    ballAngle += ballSpeed;
 
 
-    ///draw the white ball in reverse direction
+
+    ///draw the wheel 
     push();
-    translate(wheelX,wheelY);
-    rotate(angle/-1);
-    image(whiteBall, 20,20 );
-    pop();
-  }
-  else if (state === 'spinoff'){
-    imageMode(CENTER);
-
-    // faster spin
-    angle = frameCount /50;
-    
-
-    // save canvas state
-    push(); 
-
-    // move origin to wheel center
-    translate(wheelX, wheelY); 
-
-    // rotate around that point
-    rotate(angle); 
+    translate(wheelX, wheelY);
+    rotate(wheelAngle);
     image(rouletteIMG, 0, 0, imgWidth, imgWidth);
-
-    push();
-    image(whiteBall, 0,0 );
     pop();
-    
 
-    
-    
-
-    // draw base after so it doesn't spin
+    ///draw the base without rotation
     image(rouletteBaseIMG, wheelX, wheelY, imgWidth + imgWidth/3, imgWidth + imgWidth/3);
 
-
-    ///draw the white ball in reverse direction
+    ///draw the ball
+    push();
+    translate(wheelX, wheelY);
+    rotate(ballAngle);
+    image(whiteBall, 0,0); // place on rim
+    pop();
   }
 }
+  
 
 function placeBets(){
 
