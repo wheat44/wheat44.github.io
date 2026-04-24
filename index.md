@@ -11,6 +11,8 @@
 - [character in Grid](10-character)
 - [Walker OOP](12-walker)
 - [Ball Collision OOP](14-ball-oop)
+- [Connected Nodes](15-nodes)
+- [OOP Inheritance](16-inheritance)
 
 
 ## Assignments
